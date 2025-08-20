@@ -13,11 +13,15 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await axios.get("http://localhost:5000/api/users");
+      const res = await axios.get("/api/users");
       setUsers(res.data);
     } catch (err) {
-      console.error("Error fetching users:", err);
-      setError(err);
+      if (err?.response?.status === 404) {
+        setUsers([]);
+      } else {
+        console.error("Error fetching users:", err);
+        setError(err);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -28,18 +32,21 @@ function App() {
   }, []);
 
   const addUser = async (userData) => {
-    await axios.post("http://localhost:5000/api/user", userData);
+    await axios.post("/api/user", userData);
     fetchUsers();
   };
 
   const updateUser = async (id, userData) => {
-    await axios.put(`http://localhost:5000/api/user/update/${id}`, userData);
+    await axios.put(`/api/user/update/${id}`, userData);
     fetchUsers();
   };
 
   const deleteUser = async (id) => {
-    await axios.delete(`http://localhost:5000/api/user/delete/${id}`);
+    await axios.delete(`/api/user/delete/${id}`);
     fetchUsers();
+    if (editingUser && editingUser._id === id) {
+      setEditingUser(null);
+    }
   };
 
   const handleFormSubmit = async (formData) => {
@@ -51,9 +58,16 @@ function App() {
     }
   };
 
-  const handleStartEdit = (user) => {
-    setEditingUser(user);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleStartEdit = async (user) => {
+    try {
+      const res = await axios.get(`/api/user/${user._id}`);
+      setEditingUser(res.data);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      const message = err?.response?.data?.message || err?.message || "Failed to load user";
+      alert(message);
+      fetchUsers();
+    }
   };
 
   return (

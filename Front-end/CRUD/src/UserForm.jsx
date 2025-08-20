@@ -3,6 +3,7 @@ import axios from "axios";
 
 function UserForm({ onSubmit, initialData, onCancel }) {
   const [formData, setFormData] = useState({ name: "", email: "", address: "" });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -22,7 +23,17 @@ function UserForm({ onSubmit, initialData, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onSubmit(formData);
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await onSubmit(formData);
+      setFormData({ name: "", email: "", address: "" });
+    } catch (err) {
+      const message = err?.response?.data?.message || err?.message || "Request failed";
+      alert(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -55,7 +66,7 @@ function UserForm({ onSubmit, initialData, onCancel }) {
         required
       />
       <div className="d-flex gap-2">
-        <button className="btn btn-success" type="submit">
+        <button className="btn btn-success" type="submit" disabled={submitting}>
           {initialData ? "Update User" : "Add User"}
         </button>
         {initialData && (

@@ -23,7 +23,7 @@ function UserTable({ users, onDelete, isLoading, onEdit }) {
           </tr>
         </thead>
         <tbody>
-          {users.length > 0 ? (
+          {users && users.length > 0 ? (
             users.map((user) => (
               <tr key={user._id}>
                 <td>{user.name}</td>

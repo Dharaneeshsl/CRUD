@@ -8,7 +8,7 @@ import route from './routes/UserRoute.js';
 const app=express();
 app.use(bodyParser.json())
 
-const PORT=process.env.PORT || 5000;
+const PORT=5000;
 const MONGO_URI=process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI).then(()=>{

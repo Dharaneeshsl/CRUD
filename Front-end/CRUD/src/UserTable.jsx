@@ -11,15 +11,14 @@ function UserTable({ users, onDelete, isLoading, onEdit }) {
     );
   }
   return (
-    <div>
-      
-      <table className="table table-dark table-striped text-center">
+    <div className="table-responsive">
+      <table className="table table-striped text-center">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Address</th>
-            <th>Action</th>
+            <th className="bg-dark text-white">Name</th>
+            <th className="bg-dark text-white">Email</th>
+            <th className="bg-dark text-white">Address</th>
+            <th className="bg-dark text-white">Action</th>
           </tr>
         </thead>
         <tbody>

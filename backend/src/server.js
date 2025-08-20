@@ -1,35 +1,20 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+dotenv.config();
+import route from './routes/UserRoute.js';
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const app=express();
+app.use(bodyParser.json())
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+const PORT=process.env.PORT || 5000;
+const MONGO_URI=process.env.MONGO_URI;
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/crud-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(MONGO_URI).then(()=>{
+    console.log("Connected to MongoDB");
+    app.listen(PORT,()=>console.log(`Server is connected to ${PORT}`));
+}).catch((err)=>
+    console.log(err)) 
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
-
-// Routes
-app.use('/api/items', require('./routes/items'));
-
-// Basic route
-app.get('/', (req, res) => {
-  res.send('CRUD API is running');
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.use("/api",route);

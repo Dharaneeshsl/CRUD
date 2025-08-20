@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for CRUD application",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
@@ -23,5 +24,6 @@
     "url": "CRUD"
   },
   "author": "Dharaneesh",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": []
 }
